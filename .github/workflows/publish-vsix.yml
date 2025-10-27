@@ -19,17 +19,19 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npm run build || npm run compile || true
-      - name: Download VSIX Artifact
-        uses: actions/download-artifact@v4
+      - name: Package VSIX
+        run: npx vsce package
+      - name: Upload VSIX Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: nested-file-toolkit-vsix
+          path: '*.vsix'
       - name: Publish to VSCode Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
-          ARTIFACT_DIR="nested-file-toolkit-vsix"
-          VSIX_FILE=$(ls "$ARTIFACT_DIR"/*.vsix | head -n 1)
+          VSIX_FILE=$(ls *.vsix | head -n 1)
           if [ -z "$VSIX_FILE" ]; then
-            echo "No VSIX file found to publish in $ARTIFACT_DIR." && exit 1
+            echo "No VSIX file found to publish." && exit 1
           fi
           npx vsce publish --packagePath "$VSIX_FILE" --pat "$VSCE_PAT"
