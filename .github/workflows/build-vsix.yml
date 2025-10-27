@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,7 +36,7 @@ jobs:
 
       - name: Create GitHub Release and Upload VSIX
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           VERSION="v${{ steps.get_version.outputs.version }}"
           gh release view "$VERSION" || gh release create "$VERSION" *.vsix --title "Release $VERSION" --notes ""
