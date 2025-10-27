@@ -27,8 +27,9 @@ jobs:
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
-          VSIX_FILE=$(ls *.vsix | head -n 1)
+          ARTIFACT_DIR="nested-file-toolkit-vsix"
+          VSIX_FILE=$(ls "$ARTIFACT_DIR"/*.vsix | head -n 1)
           if [ -z "$VSIX_FILE" ]; then
-            echo "No VSIX file found to publish." && exit 1
+            echo "No VSIX file found to publish in $ARTIFACT_DIR." && exit 1
           fi
           npx vsce publish --packagePath "$VSIX_FILE" --pat "$VSCE_PAT"
