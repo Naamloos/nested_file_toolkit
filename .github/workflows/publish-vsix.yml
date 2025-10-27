@@ -34,4 +34,4 @@ jobs:
           if [ -z "$VSIX_FILE" ]; then
             echo "No VSIX file found to publish." && exit 1
           fi
-          npx vsce publish --packagePath "$VSIX_FILE" --pat "$VSCE_PAT" --publisher Naamloos
+          npx vsce publish --packagePath "$VSIX_FILE" --pat "$VSCE_PAT"
