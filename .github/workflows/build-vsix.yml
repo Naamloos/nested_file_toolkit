@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ master ]
 
-permissions:
-  contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,7 +18,6 @@ jobs:
       - run: npm run build || npm run compile || true
       - name: Package VSIX
         run: npx vsce package
-
       - name: Upload VSIX Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -34,9 +30,21 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release and Upload VSIX
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        run: |
-          VERSION="v${{ steps.get_version.outputs.version }}"
-          gh release view "$VERSION" || gh release create "$VERSION" *.vsix --title "Release $VERSION" --notes ""
+
+      - name: Upload VSIX to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: '*.vsix'
+          tag_name: v${{ steps.get_version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
