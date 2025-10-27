@@ -1,0 +1,36 @@
+name: Publish to VSCode Marketplace
+
+on:
+  workflow_dispatch:
+    inputs:
+      vsix_path:
+        description: 'Path to the VSIX file to publish (default: latest built)'
+        required: false
+        default: ''
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run build || npm run compile || true
+      - name: Download VSIX Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: extension-vsix
+      - name: Publish to VSCode Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          VSIX_FILE="${{ github.event.inputs.vsix_path }}"
+          if [ -z "$VSIX_FILE" ]; then
+            VSIX_FILE=$(ls *.vsix | head -n 1)
+          fi
+          if [ -z "$VSIX_FILE" ]; then
+            echo "No VSIX file found to publish." && exit 1
+          fi
+          npx vsce publish --packagePath "$VSIX_FILE" --pat "$VSCE_PAT"
