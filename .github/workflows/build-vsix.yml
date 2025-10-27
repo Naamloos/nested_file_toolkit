@@ -21,6 +21,6 @@ jobs:
       - name: Upload VSIX Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: extension-vsix
+          name: nested-file-toolkit-vsix
           path: '*.vsix'
 

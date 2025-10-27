@@ -8,11 +8,6 @@ permissions:
 
 on:
   workflow_dispatch:
-    inputs:
-      vsix_path:
-        description: 'Path to the VSIX file to publish (default: latest built)'
-        required: false
-        default: ''
 
 jobs:
   publish:
@@ -27,15 +22,12 @@ jobs:
       - name: Download VSIX Artifact
         uses: actions/download-artifact@v4
         with:
-          name: extension-vsix
+          name: nested-file-toolkit-vsix
       - name: Publish to VSCode Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
-          VSIX_FILE="${{ github.event.inputs.vsix_path }}"
-          if [ -z "$VSIX_FILE" ]; then
-            VSIX_FILE=$(ls *.vsix | head -n 1)
-          fi
+          VSIX_FILE=$(ls *.vsix | head -n 1)
           if [ -z "$VSIX_FILE" ]; then
             echo "No VSIX file found to publish." && exit 1
           fi
