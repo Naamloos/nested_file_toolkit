@@ -1,5 +1,11 @@
 name: Publish to VSCode Marketplace
 
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  pull-requests: write
+
 on:
   workflow_dispatch:
     inputs:
