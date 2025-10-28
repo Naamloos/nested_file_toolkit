@@ -6,6 +6,12 @@ import { detectParentFiles } from '../util/detect-parent-files';
 import { childPatternToRegex } from '../util/child-pattern-to-regex';
 
 const syncNestedFileRenames = async (event: FileRenameEvent): Promise<void> => {
+  const syncRenames = workspace.getConfiguration('nested-file-toolkit').get<boolean>('syncRenames');
+
+  if (!syncRenames) {
+    return;
+  }
+
   await Promise.all(event.files.map((f) => renameRelationsIfNeeded(f.oldUri, f.newUri)));
 };
 

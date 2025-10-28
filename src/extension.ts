@@ -2,9 +2,10 @@ import { createNestedFiles } from './commands/create-nested-file';
 import { splitWithRelated } from './commands/split-nested-file';
 import { ParentReferenceHoverProvider } from './providers/parent-ref-hover-provider';
 import { ParentReferenceDefinitionProvider } from './providers/parent-ref-definition-provider';
-import { ExtensionContext, commands, languages, workspace } from 'vscode';
+import { ExtensionContext, commands, languages, window, workspace } from 'vscode';
 import { ParentReferenceDecorator } from './providers/parent-ref-decorator';
 import { syncNestedFileRenames } from './events/sync-nested-file-rename';
+import { FileChildCountProvider } from './providers/file-children-count-provider';
 
 export function activate(context: ExtensionContext): void {
   console.log('[Nested File Toolkit] Extension activating...');
@@ -23,6 +24,8 @@ export function activate(context: ExtensionContext): void {
 
   const fileRenameSyncListener = workspace.onDidRenameFiles(syncNestedFileRenames);
 
+  const fileCountDecorationProvider = window.registerFileDecorationProvider(new FileChildCountProvider());
+
   context.subscriptions.push(
     createCommand,
     splitCommand,
@@ -30,6 +33,7 @@ export function activate(context: ExtensionContext): void {
     hoverProvider,
     parentRefDecorator,
     fileRenameSyncListener,
+    fileCountDecorationProvider,
   );
   console.log('[Nested File Toolkit] Extension activated successfully! (raHH!)');
 }

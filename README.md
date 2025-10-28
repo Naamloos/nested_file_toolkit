@@ -12,6 +12,10 @@ Nested File Toolkit provides utilities for working with nested files in your VS 
 
 - **~symbol References**: In nested files, you can create clickable references to symbols in parent files using the `~` syntax. Simply write a comment like `// ~MyClass` and Ctrl+Click on it to navigate to its definition in the parent file. This works with classes, functions, interfaces, and other symbols.
 
+- **Sync Nested File Renames**: Automatically rename child and parent files when their nested file gets renamed. e.g. when renaming `myFile.ts` to `myFileOld.ts`, `myFile.spec.ts` will automatically rename to `myFileOld.spec.ts` (and vice versa), if this file nesting has been configured in your VS Code.
+
+- **Child File Count**: Show a badge indicating the amount of child files a file has nested.
+
 ## Usage
 
 1. **Configure File Nesting Patterns**: In your VS Code settings, set up `explorer.fileNesting.patterns` to define how files are related. For example:
@@ -41,11 +45,17 @@ VS Code includes defaults for this setting. These are also supported by this ext
    ```
    When you Ctrl+Click (Cmd+Click on Mac) on the `~symbolName`, VS Code will navigate to its definition in the parent file. Hovering over it shows which parent file(s) contain it. The reference will be highlighted. This behavior can be toggled using the `nested-file-toolkit.enableParentRefs` setting.
 
+6. **Sync renamed files**: When renaming a file, nested or parent files will also be renamed, if the `nested-file-toolkit.syncRenames` setting is enabled.
+
+7. **Nested File Count badge**: Shows a badge that displays the amount of child files, if the `nested-file-toolkit.showChildrenBadge` setting is enabled.
+
 ## Extension Settings
 
 This extension contributes the following settings:
 - `nested-file-toolkit.templates`: (Optional) Custom templates for new nested files. Keys are glob patterns, values are template strings with placeholders.
 - `nested-file-toolkit.enableParentRefs`: Enable or disable highlighting of parent file references using the `~` prefix. Set to `false` to disable “~ symbol references” (default: `true`).
+- `nested-file-toolkit.syncRenames`: Enable or disable automatically syncing renames between parent and child files. (default: `false`).
+- `nested-file-toolkit.showChildrenBadge`: Enables or disables a badge that shows a file's child count.
 
 ## Known Issues
 
@@ -57,6 +67,15 @@ Please open an [issue on GitHub](https://github.com/Naamloos/nested_file_toolkit
 
 ## Release Notes
 
-### 1.0.0
+### 0.1.0
 
-Initial release of Nested File Toolkit
+- Introduce Nested filename syncing.
+- Introduce Nested Children Count badge.
+
+### 0.0.2
+
+- Some minor fixes and renaming
+
+### 0.0.1
+
+- Initial release of Nested File Toolkit
