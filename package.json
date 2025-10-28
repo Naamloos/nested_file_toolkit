@@ -2,7 +2,7 @@
   "name": "nested-file-toolkit",
   "displayName": "Nested File Toolkit",
   "description": "VS Code extension that makes working with nested files just a little easier than before.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "Naamloos",
     "url": "https://naamloos.dev"
@@ -26,12 +26,12 @@
     "commands": [
       {
         "command": "nested-file-toolkit.create",
-        "title": "Nested File Toolkit: Create Nested File",
+        "title": "Create Nested File",
         "icon": "$(files)"
       },
       {
         "command": "nested-file-toolkit.splitWithRelated",
-        "title": "Nested File Toolkit: Split with Related",
+        "title": "Split with Nesting",
         "icon": "$(law)"
       }
     ],
