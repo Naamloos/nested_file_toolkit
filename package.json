@@ -2,7 +2,7 @@
   "name": "nested-file-toolkit",
   "displayName": "Nested File Toolkit",
   "description": "VS Code extension that makes working with nested files just a little easier than before.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "Naamloos",
     "url": "https://naamloos.dev"
@@ -26,12 +26,12 @@
     "commands": [
       {
         "command": "nested-file-toolkit.create",
-        "title": "Nested File Toolkit: Create Nested File",
+        "title": "Create Nested File",
         "icon": "$(files)"
       },
       {
         "command": "nested-file-toolkit.splitWithRelated",
-        "title": "Nested File Toolkit: Split with Related",
+        "title": "Split with Nesting",
         "icon": "$(law)"
       }
     ],
@@ -56,7 +56,7 @@
           "type": "object",
           "default": {
           },
-          "description": "Map of file suffix -> template content.\nKey is the same same as file nesting templates.\nTemplates support the following placeholders:\n{{name}} - basename without extension\n{{fileName}} - full filename with extension\n{{capture}} - captured value from wildcard pattern\n{{nestedFileName}} - filename of the nested file\n{{nestedName}} - nested file name without extension\n{{date}} - date when file is created"
+          "description": "Map of file suffix to template content.\nKey is the same same as file nesting templates.\nTemplates support the following placeholders:\n{{name}} - basename without extension\n{{fileName}} - full filename with extension\n{{capture}} - captured value from wildcard pattern\n{{nestedFileName}} - filename of the nested file\n{{nestedName}} - nested file name without extension\n{{date}} - date when file is created"
         },
         "nested-file-toolkit.enableParentRefs": {
           "type": "boolean",
