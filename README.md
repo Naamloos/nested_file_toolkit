@@ -2,6 +2,8 @@
 
 Nested File Toolkit provides utilities for working with nested files in your VS Code workspace. It helps you quickly create, open, and manage related files that follow naming conventions, such as test files, style files, or component files.
 
+[Get it from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=Naamloos.nested-file-toolkit)
+
 ![Demo Gif](./demo.gif)
 
 ## Features
