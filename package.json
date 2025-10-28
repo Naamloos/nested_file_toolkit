@@ -54,14 +54,18 @@
       "properties": {
         "nested-file-toolkit.templates": {
           "type": "object",
-          "default": {
-          },
+          "default": {},
           "description": "Map of file suffix -> template content.\nKey is the same same as file nesting templates.\nTemplates support the following placeholders:\n{{name}} - basename without extension\n{{fileName}} - full filename with extension\n{{capture}} - captured value from wildcard pattern\n{{nestedFileName}} - filename of the nested file\n{{nestedName}} - nested file name without extension\n{{date}} - date when file is created"
         },
         "nested-file-toolkit.enableParentRefs": {
           "type": "boolean",
           "default": true,
           "description": "Enable or disable the parent reference feature that highlights references to parent files when prefixing with `~`."
+        },
+        "nested-file-toolkit.syncRenames": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable or disable automatic renaming of nested files when the parent file is renamed."
         }
       }
     }
@@ -89,16 +93,20 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.105.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
+    "@types/vscode": "^1.105.0",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
-    "eslint": "^9.36.0",
-    "esbuild": "^0.25.10",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.9.3",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.25.10",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-unused-imports": "^4.3.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
   }
 }

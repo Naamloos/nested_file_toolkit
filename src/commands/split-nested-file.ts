@@ -1,4 +1,4 @@
-import { basename, dirname, join, relative } from 'path';
+import { basename, dirname, relative } from 'path';
 import { commands, Uri, ViewColumn, window, workspace } from 'vscode';
 import { detectParentFiles } from '../util/detect-parent-files';
 import { detectChildFiles } from '../util/detect-child-files';
@@ -9,25 +9,42 @@ import { detectChildFiles } from '../util/detect-child-files';
 const openBeside = async (absPath: string, left: boolean = false): Promise<void> => {
   // Store current editor's URI
   const currentEditor = window.activeTextEditor;
-  if(!currentEditor) {
+
+  if (!currentEditor) {
     return;
   }
-  
+
   const currentUri = currentEditor.document.uri;
 
   // Close the current editor
   await commands.executeCommand('workbench.action.closeActiveEditor');
-  
-  if(!left) {
+
+  if (!left) {
     const newDoc = await workspace.openTextDocument(Uri.file(absPath));
-    await window.showTextDocument(newDoc, { viewColumn: ViewColumn.One, preview: false });
+
+    await window.showTextDocument(newDoc, {
+      viewColumn: ViewColumn.One,
+      preview: false,
+    });
     const currentDoc = await workspace.openTextDocument(currentUri);
-    await window.showTextDocument(currentDoc, { viewColumn: ViewColumn.Beside, preview: false });
+
+    await window.showTextDocument(currentDoc, {
+      viewColumn: ViewColumn.Beside,
+      preview: false,
+    });
   } else {
     const currentDoc = await workspace.openTextDocument(currentUri);
-    await window.showTextDocument(currentDoc, { viewColumn: ViewColumn.One, preview: false });
+
+    await window.showTextDocument(currentDoc, {
+      viewColumn: ViewColumn.One,
+      preview: false,
+    });
     const newDoc = await workspace.openTextDocument(Uri.file(absPath));
-    await window.showTextDocument(newDoc, { viewColumn: ViewColumn.Beside, preview: false });
+
+    await window.showTextDocument(newDoc, {
+      viewColumn: ViewColumn.Beside,
+      preview: false,
+    });
   }
 };
 
@@ -40,30 +57,42 @@ const openBeside = async (absPath: string, left: boolean = false): Promise<void>
  */
 const splitWithRelated = async (uri?: Uri): Promise<void> => {
   const fileUri = uri || window.activeTextEditor?.document.uri;
-  if(!fileUri) {
+
+  if (!fileUri) {
     window.showErrorMessage('No active file.');
+
     return;
   }
+
   const fsPath = fileUri.fsPath;
 
   const children = await detectChildFiles(fsPath);
   const parents = await detectParentFiles(fsPath);
 
   const candidates = [...children, ...parents];
-  if(!candidates.length) {
+
+  if (!candidates.length) {
     window.showInformationMessage('No related nested file or parent found for this file.');
+
     return;
   }
 
   let targetPath = candidates[0];
-  if(candidates.length > 1) {
+
+  if (candidates.length > 1) {
     const picked = await window.showQuickPick(
-      candidates.map(p => ({ label: basename(p), description: relative(dirname(fsPath), p), full: p })),
-      { placeHolder: 'Select file to open beside' }
+      candidates.map((p) => ({
+        label: basename(p),
+        description: relative(dirname(fsPath), p),
+        full: p,
+      })),
+      { placeHolder: 'Select file to open beside' },
     );
-    if(!picked) {
+
+    if (!picked) {
       return;
     }
+
     targetPath = picked.full;
   }
 

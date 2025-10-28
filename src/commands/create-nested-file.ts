@@ -5,11 +5,12 @@ import { globToRegex } from '../util/glob-to-regex';
 import { getCapture } from '../util/get-capture';
 import { expandChildren } from '../util/expand-children';
 
-const createNestedFiles = async (uri: Uri) => {
+const createNestedFiles = async (uri: Uri): Promise<void> => {
   const fileUri = uri || window.activeTextEditor?.document.uri;
 
-  if(!fileUri) {
+  if (!fileUri) {
     window.showErrorMessage('No file selected or active.');
+
     return;
   }
 
@@ -19,17 +20,16 @@ const createNestedFiles = async (uri: Uri) => {
   const parentDirName = dirname(fileUri.fsPath);
 
   // Get the file nesting patterns from the user's settings
-  const patterns = workspace.getConfiguration('explorer', fileUri)
-    .get<Record<string, string>>('fileNesting.patterns');
+  const patterns = workspace.getConfiguration('explorer', fileUri).get<Record<string, string>>('fileNesting.patterns');
   // Get the nested file templates from the user's settings
   const nestedFileTemplates = {
     ...TemplateRepository,
-    ...workspace.getConfiguration('nested-file-toolkit', fileUri)
-      .get<Record<string, string>>('templates')
+    ...workspace.getConfiguration('nested-file-toolkit', fileUri).get<Record<string, string>>('templates'),
   };
 
-  if(!patterns) {
+  if (!patterns) {
     window.showErrorMessage('No file nesting patterns found in settings.');
+
     return;
   }
 
@@ -37,9 +37,10 @@ const createNestedFiles = async (uri: Uri) => {
   let matchedPattern: string | undefined;
   let matchedChildrenStr: string | undefined;
 
-  for(const [pattern, childrenStr] of Object.entries(patterns)) {
+  for (const [pattern, childrenStr] of Object.entries(patterns)) {
     const regex = globToRegex(pattern);
-    if(regex.test(fileName)) {
+
+    if (regex.test(fileName)) {
       capturedValue = getCapture(fileName, pattern);
       matchedPattern = pattern;
       matchedChildrenStr = childrenStr;
@@ -47,8 +48,9 @@ const createNestedFiles = async (uri: Uri) => {
     }
   }
 
-  if(!capturedValue || !matchedPattern || !matchedChildrenStr) {
+  if (!capturedValue || !matchedPattern || !matchedChildrenStr) {
     window.showErrorMessage(`No matching pattern found for file: ${fileName}`);
+
     return;
   }
 
@@ -63,34 +65,36 @@ const createNestedFiles = async (uri: Uri) => {
   const created: string[] = [];
   const existing: string[] = [];
   const pickedItems = picked ?? [];
-  
-  for(const pickedItem of pickedItems) {
-    const templatePlaceholders : FileTemplatePlaceholders = {
+
+  for (const pickedItem of pickedItems) {
+    const templatePlaceholders: FileTemplatePlaceholders = {
       name: fileName.replace(/\.[^.]+$/, ''),
       fileName: fileName,
-      capture: capturedValue!,
+      capture: capturedValue,
       nestedFileName: pickedItem,
       nestedName: pickedItem.replace(/\.[^.]+$/, ''),
       date: new Date(Date.now()),
     };
     const template = findFittingTemplate(pickedItem, nestedFileTemplates || {}, templatePlaceholders);
     const isNew = await createFile(pickedItem, parentDirName, template);
-    if(isNew) {
+
+    if (isNew) {
       created.push(pickedItem);
     } else {
       existing.push(pickedItem);
     }
   }
 
-  if(created.length > 0) {
+  if (created.length > 0) {
     window.showInformationMessage(`Created nested files: ${created.join(', ')}`);
   }
-  if(existing.length > 0) {
+
+  if (existing.length > 0) {
     window.showInformationMessage(`Opened existing files: ${existing.join(', ')}`);
   }
 };
 
-const createFile = async (filename: string, parentDir: string, template: string) : Promise<boolean> => {
+const createFile = async (filename: string, parentDir: string, template: string): Promise<boolean> => {
   const filePath = join(parentDir, filename);
   const fileUri = Uri.file(filePath);
   let isNewFile = false;
@@ -100,40 +104,53 @@ const createFile = async (filename: string, parentDir: string, template: string)
     await workspace.fs.stat(fileUri);
   } catch {
     const encoder = new TextEncoder();
+
     await workspace.fs.writeFile(fileUri, encoder.encode(template));
     isNewFile = true;
   }
 
   const document = await workspace.openTextDocument(filePath);
-  await window.showTextDocument(document, { preview: false, preserveFocus: false });
+
+  await window.showTextDocument(document, {
+    preview: false,
+    preserveFocus: false,
+  });
 
   return isNewFile;
 };
 
-const findFittingTemplate = (filename: string, patterns: Record<string, string>, placeholders: FileTemplatePlaceholders) : string => {
-  let longestMatch: { pattern: string, template: string, length: number } | undefined;
-  
-  for(const [pattern, template] of Object.entries(patterns)) {
+const findFittingTemplate = (
+  filename: string,
+  patterns: Record<string, string>,
+  placeholders: FileTemplatePlaceholders,
+): string => {
+  let longestMatch: { pattern: string; template: string; length: number } | undefined;
+
+  for (const [pattern, template] of Object.entries(patterns)) {
     const regex = globToRegex(pattern);
+
     if (regex.test(filename)) {
       const length = pattern.length;
-      if(!longestMatch || length > longestMatch.length) {
+
+      if (!longestMatch || length > longestMatch.length) {
         longestMatch = { pattern, template, length };
       }
     }
   }
 
-  if(!longestMatch) {
+  if (!longestMatch) {
     return '';
   }
-  
+
   // Replace all template placeholders
   let expandedTemplate = longestMatch.template;
-  for(const [key, value] of Object.entries(placeholders)) {
+
+  for (const [key, value] of Object.entries(placeholders)) {
     const placeholderRegex = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+
     expandedTemplate = expandedTemplate.replace(placeholderRegex, value.toString());
   }
-  
+
   return expandedTemplate;
 };
 

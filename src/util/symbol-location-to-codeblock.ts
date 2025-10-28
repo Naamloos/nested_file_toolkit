@@ -1,15 +1,11 @@
-import { TextDocument, DocumentSymbol, Position, Range } from "vscode";
+import { TextDocument, DocumentSymbol, Position, Range } from 'vscode';
 
 type SnippetOptions = {
   maxLines?: number;
   maxChars?: number;
 };
 
-export function symbolToSnippet(
-  document: TextDocument,
-  symbol: DocumentSymbol,
-  options: SnippetOptions = {}
-): string {
+export function symbolToSnippet(document: TextDocument, symbol: DocumentSymbol, options: SnippetOptions = {}): string {
   const maxLines = options.maxLines ?? 20;
   const maxChars = options.maxChars ?? 500;
 
@@ -37,10 +33,11 @@ export function symbolToSnippet(
   // Handle single-line symbols gracefully
   if (startLine === endLine) {
     const head = openLine.slice(0, Math.max(10, Math.min(60, maxChars - 5))).trimEnd();
+
     return `${head} ...`;
   }
 
-  const indent = (openLine.match(/^\s*/) ?? [""])[0];
+  const indent = (openLine.match(/^\s*/) ?? [''])[0];
   const ellipsis = `${indent}    ...`;
 
   return `${openLine}\n${ellipsis}\n${closeLine}`;

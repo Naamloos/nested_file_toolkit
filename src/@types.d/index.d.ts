@@ -28,4 +28,4 @@ type FileTemplatePlaceholders = {
    * The date when the file is created.
    */
   date: Date;
-}
+};
