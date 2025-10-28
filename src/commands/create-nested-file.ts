@@ -100,7 +100,7 @@ const createFile = async (filename: string, parentDir: string, template: string)
     await workspace.fs.stat(fileUri);
   } catch {
     const encoder = new TextEncoder();
-    await workspace.fs.writeFile(fileUri, encoder.encode(template));
+    await workspace.fs.writeFile(fileUri, encoder.encode(template.trim()));
     isNewFile = true;
   }
 
