@@ -116,7 +116,7 @@ const createFile = async (filename: string, parentDir: string, template: string)
     preserveFocus: false,
   });
 
-  if(isNewFile) {
+  if (isNewFile) {
     await commands.executeCommand('editor.action.formatDocument', fileUri);
   }
 
