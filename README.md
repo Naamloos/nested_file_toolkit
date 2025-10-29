@@ -69,6 +69,10 @@ Please open an [issue on GitHub](https://github.com/Naamloos/nested_file_toolkit
 
 ## Release Notes
 
+### 0.1.1
+
+- Run formatter on newly created files
+
 ### 0.1.0
 
 - Introduce Nested filename syncing.
