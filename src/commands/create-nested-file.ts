@@ -1,5 +1,5 @@
 import { basename, dirname, join } from 'path';
-import { Uri, window, workspace } from 'vscode';
+import { Uri, window, workspace, commands } from 'vscode';
 import TemplateRepository from '../constants/templates';
 import { globToRegex } from '../util/glob-to-regex';
 import { getCapture } from '../util/get-capture';
@@ -106,6 +106,7 @@ const createFile = async (filename: string, parentDir: string, template: string)
     const encoder = new TextEncoder();
 
     await workspace.fs.writeFile(fileUri, encoder.encode(template.trim()));
+    await commands.executeCommand('editor.action.formatDocument', fileUri);
     isNewFile = true;
   }
 
