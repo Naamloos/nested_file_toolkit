@@ -106,7 +106,6 @@ const createFile = async (filename: string, parentDir: string, template: string)
     const encoder = new TextEncoder();
 
     await workspace.fs.writeFile(fileUri, encoder.encode(template.trim()));
-    await commands.executeCommand('editor.action.formatDocument', fileUri);
     isNewFile = true;
   }
 
@@ -116,6 +115,10 @@ const createFile = async (filename: string, parentDir: string, template: string)
     preview: false,
     preserveFocus: false,
   });
+
+  if(isNewFile) {
+    await commands.executeCommand('editor.action.formatDocument', fileUri);
+  }
 
   return isNewFile;
 };
