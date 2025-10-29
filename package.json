@@ -2,7 +2,7 @@
   "name": "nested-file-toolkit",
   "displayName": "Nested File Toolkit",
   "description": "VS Code extension that makes working with nested files just a little easier than before.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Naamloos",
     "url": "https://naamloos.dev"
