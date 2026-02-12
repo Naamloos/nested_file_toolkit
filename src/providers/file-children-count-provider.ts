@@ -54,7 +54,6 @@ export class FileChildCountProvider implements FileDecorationProvider {
     return {
       badge: String(count) + '\u2193', // down arrow
       tooltip: `${count} nested file${count !== 1 ? 's' : ''}`,
-      color: new ThemeColor('badge.foreground'),
     };
   }
 }
