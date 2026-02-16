@@ -1,4 +1,4 @@
-import { FileDecorationProvider, EventEmitter, Uri, workspace } from 'vscode';
+import { FileDecorationProvider, EventEmitter, Uri, ThemeColor, workspace } from 'vscode';
 import { FileDecoration } from 'vscode';
 import { detectChildFiles } from '../util/detect-child-files';
 import { detectParentFiles } from '../util/detect-parent-files';
@@ -54,6 +54,7 @@ export class FileChildCountProvider implements FileDecorationProvider {
     return {
       badge: String(count) + '\u2193', // down arrow
       tooltip: `${count} nested file${count !== 1 ? 's' : ''}`,
+      color: new ThemeColor('sideBar.foreground'),
     };
   }
 }
